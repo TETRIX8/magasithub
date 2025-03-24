@@ -25,7 +25,7 @@ const userPublications: ProjectCardProps[] = [
     date: '15 мая 2023',
     category: 'Информатика',
     authors: [
-      { id: '1', name: 'Полный Ахмат ', role: 'Студент Кто че по кайфу', avatarUrl: 'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjVsdWk0aGZtMWk5enUyaGZ1NTBxaHZybnA3dm42emY0ZG5pbXFwNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oghsJiOZk8KA9rb12a/giphy.gif' },
+      { id: '1', name: 'Иван Петров', role: 'Студент', avatarUrl: 'https://i.pravatar.cc/150?img=68' },
       { id: '2', name: 'Мария Иванова', role: 'Профессор', avatarUrl: 'https://i.pravatar.cc/150?img=5' },
     ],
     commentsCount: 12,
