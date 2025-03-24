@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Publications from "./pages/Publications";
 import NotFound from "./pages/NotFound";
+import WelcomeDialog from "./components/WelcomeDialog";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <WelcomeDialog />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
