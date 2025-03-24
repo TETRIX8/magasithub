@@ -114,22 +114,22 @@ const ProjectCard = ({
               </div>
             )}
             <span className="text-muted-foreground text-xs ml-4">
-              By {authors[0].name}{authors.length > 1 ? ` and ${authors.length - 1} more` : ''}
+              Автор: {authors[0].name}{authors.length > 1 ? ` и еще ${authors.length - 1}` : ''}
             </span>
           </div>
           
           <div className="flex gap-2">
             <Button variant="ghost" size="icon" className="h-8 w-8">
               <MessageCircle className="h-4 w-4" />
-              {commentsCount > 0 && <span className="sr-only">{commentsCount} comments</span>}
+              {commentsCount > 0 && <span className="sr-only">{commentsCount} комментариев</span>}
             </Button>
             <Button variant="ghost" size="icon" className="h-8 w-8">
               <Bookmark className={saved ? "h-4 w-4 fill-primary text-primary" : "h-4 w-4"} />
-              <span className="sr-only">{saved ? 'Saved' : 'Save'}</span>
+              <span className="sr-only">{saved ? 'Сохранено' : 'Сохранить'}</span>
             </Button>
             <Button variant="ghost" size="icon" className="h-8 w-8">
               <ArrowUpRight className="h-4 w-4" />
-              <span className="sr-only">View</span>
+              <span className="sr-only">Просмотр</span>
             </Button>
           </div>
         </div>

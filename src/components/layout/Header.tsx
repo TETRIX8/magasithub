@@ -37,11 +37,11 @@ const Header = () => {
 
   // Navigation links
   const navLinks = [
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Publications', path: '/publications' },
-    { name: 'Events', path: '/events' },
-    { name: 'Research', path: '/research' },
-    { name: 'People', path: '/people' },
+    { name: 'Главная', path: '/dashboard' },
+    { name: 'Публикации', path: '/publications' },
+    { name: 'События', path: '/events' },
+    { name: 'Исследования', path: '/research' },
+    { name: 'Люди', path: '/people' },
   ];
 
   return (
@@ -54,7 +54,7 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 animate-fade-in">
             <GraduationCap className="h-8 w-8 text-primary" />
-            <span className="text-xl font-display font-semibold tracking-tight">MagasitHub</span>
+            <span className="text-xl font-display font-semibold tracking-tight">АкадемХаб</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -81,7 +81,7 @@ const Header = () => {
             <div className="relative w-64 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search..."
+                placeholder="Поиск..."
                 className="pl-10 h-9 rounded-full bg-secondary/80"
               />
             </div>
@@ -94,25 +94,25 @@ const Header = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-9 w-9 rounded-full animate-fade-in" style={{ animationDelay: '0.3s' }}>
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src="/placeholder.svg" alt="User" />
-                    <AvatarFallback>US</AvatarFallback>
+                    <AvatarImage src="/placeholder.svg" alt="Пользователь" />
+                    <AvatarFallback>ПЛ</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 glass-effect">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>Мой аккаунт</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/profile">Profile</Link>
+                  <Link to="/profile">Профиль</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/settings">Settings</Link>
+                  <Link to="/settings">Настройки</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/my-publications">My Publications</Link>
+                  <Link to="/my-publications">Мои публикации</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Log out</DropdownMenuItem>
+                <DropdownMenuItem>Выйти</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -153,12 +153,12 @@ const Header = () => {
               <div className="flex items-center px-5">
                 <div className="flex-shrink-0">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src="/placeholder.svg" alt="User" />
-                    <AvatarFallback>US</AvatarFallback>
+                    <AvatarImage src="/placeholder.svg" alt="Пользователь" />
+                    <AvatarFallback>ПЛ</AvatarFallback>
                   </Avatar>
                 </div>
                 <div className="ml-3">
-                  <div className="text-base font-medium text-foreground">User Name</div>
+                  <div className="text-base font-medium text-foreground">Имя Пользователя</div>
                   <div className="text-sm font-medium text-muted-foreground">user@example.com</div>
                 </div>
                 <Button variant="ghost" size="icon" className="ml-auto">
@@ -167,13 +167,13 @@ const Header = () => {
               </div>
               <div className="mt-3 space-y-1 px-2">
                 <Link to="/profile" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary">
-                  Profile
+                  Профиль
                 </Link>
                 <Link to="/settings" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary">
-                  Settings
+                  Настройки
                 </Link>
                 <button className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary">
-                  Log out
+                  Выйти
                 </button>
               </div>
             </div>

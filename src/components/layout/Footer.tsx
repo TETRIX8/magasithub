@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { GraduationCap } from 'lucide-react';
@@ -12,86 +13,86 @@ const Footer = () => {
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center gap-2">
               <GraduationCap className="h-6 w-6 text-primary" />
-              <span className="text-lg font-display font-semibold tracking-tight">MagasitHub</span>
+              <span className="text-lg font-display font-semibold tracking-tight">АкадемХаб</span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground max-w-xs">
-              An academic social network for college students and faculty to share knowledge and research.
+              Академическая социальная сеть для студентов и преподавателей для обмена знаниями и исследованиями.
             </p>
           </div>
           
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-4">Resources</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-4">Ресурсы</h3>
             <ul className="space-y-3">
               <li>
                 <Link to="/publications" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Publications
+                  Публикации
                 </Link>
               </li>
               <li>
                 <Link to="/research" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Research
+                  Исследования
                 </Link>
               </li>
               <li>
                 <Link to="/events" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Events
+                  События
                 </Link>
               </li>
               <li>
                 <Link to="/people" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  People
+                  Люди
                 </Link>
               </li>
             </ul>
           </div>
           
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-4">College</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-4">Университет</h3>
             <ul className="space-y-3">
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  About
+                  О нас
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Departments
+                  Факультеты
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Faculty
+                  Преподаватели
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Campus
+                  Кампус
                 </a>
               </li>
             </ul>
           </div>
           
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-4">Legal</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-4">Правовая информация</h3>
             <ul className="space-y-3">
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Privacy Policy
+                  Политика конфиденциальности
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Terms of Service
+                  Условия использования
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Code of Conduct
+                  Кодекс поведения
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Contact
+                  Контакты
                 </a>
               </li>
             </ul>
@@ -100,7 +101,7 @@ const Footer = () => {
         
         <div className="mt-12 pt-8 border-t border-gray-100">
           <p className="text-sm text-muted-foreground text-center">
-            &copy; {currentYear} MagasitHub. All rights reserved.
+            &copy; {currentYear} АкадемХаб. Все права защищены.
           </p>
         </div>
       </div>
