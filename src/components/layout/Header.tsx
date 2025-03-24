@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Bell, Graduation, Menu, Search, X } from 'lucide-react';
+import { Bell, GraduationCap, Menu, Search, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -53,7 +53,7 @@ const Header = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 animate-fade-in">
-            <Graduation className="h-8 w-8 text-primary" />
+            <GraduationCap className="h-8 w-8 text-primary" />
             <span className="text-xl font-display font-semibold tracking-tight">MagasitHub</span>
           </Link>
 
