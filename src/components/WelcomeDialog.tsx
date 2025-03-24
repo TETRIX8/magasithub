@@ -36,7 +36,7 @@ const WelcomeDialog = () => {
         <DialogHeader>
           <DialogTitle className="text-center text-2xl flex items-center justify-center gap-2">
             <InfoIcon className="h-6 w-6 text-blue-500" />
-            Добро пожаловать в АкадемХаб
+            Добро пожаловать в АкадемХаб  Вход запрещен ИСЛАМУ!!!!!
           </DialogTitle>
           <DialogDescription className="text-center pt-2">
             Ваша академическая социальная сеть для обмена знаниями и исследованиями
@@ -51,7 +51,7 @@ const WelcomeDialog = () => {
             <div>
               <h3 className="font-medium">Публикации</h3>
               <p className="text-sm text-muted-foreground">
-                Публикуйте и делитесь своими научными работами и исследованиями
+                Публикуйте и делитесь  своими научными работами и исследованиями
               </p>
             </div>
           </div>
