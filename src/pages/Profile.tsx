@@ -25,7 +25,7 @@ const userPublications: ProjectCardProps[] = [
     date: '15 мая 2023',
     category: 'Информатика',
     authors: [
-      { id: '1', name: 'Иван Петров', role: 'Студент', avatarUrl: 'https://i.pravatar.cc/150?img=68' },
+      { id: '1', name: 'Полный Ахматтт', role: 'Студент', avatarUrl: 'https://i.pravatar.cc/150?img=68' },
       { id: '2', name: 'Мария Иванова', role: 'Профессор', avatarUrl: 'https://i.pravatar.cc/150?img=5' },
     ],
     commentsCount: 12,
@@ -39,7 +39,7 @@ const userPublications: ProjectCardProps[] = [
     date: '10 марта 2023',
     category: 'Информатика',
     authors: [
-      { id: '1', name: 'Иван Петров', role: 'Студент', avatarUrl: 'https://i.pravatar.cc/150?img=68' },
+      { id: '1', name: 'Полный Ахмат', role: 'Студент', avatarUrl: 'https://i.pravatar.cc/150?img=68' },
     ],
     commentsCount: 5,
     tags: ['Базы данных', 'Оптимизация производительности', 'Большие данные'],
@@ -49,7 +49,7 @@ const userPublications: ProjectCardProps[] = [
 
 // Sample user data
 const userData = {
-  name: 'Иван Петров',
+  name: 'Полный ахматтт',
   role: 'Студент факультета информатики',
   year: '3 курс',
   email: 'ivan.petrov@university.edu',
