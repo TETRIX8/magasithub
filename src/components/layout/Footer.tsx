@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Graduation } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -12,7 +11,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center gap-2">
-              <Graduation className="h-6 w-6 text-primary" />
+              <GraduationCap className="h-6 w-6 text-primary" />
               <span className="text-lg font-display font-semibold tracking-tight">MagasitHub</span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground max-w-xs">
