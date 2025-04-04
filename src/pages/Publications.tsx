@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookText, ChevronDown, Filter, Search, SlidersHorizontal, Plus } from 'lucide-react';
@@ -22,7 +21,7 @@ import {
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ProjectCard, { ProjectCardProps } from '@/components/ui/ProjectCard';
-import { supabase } from "@/integrations/supabase/client";
+import { getPublications } from "@/integrations/supabase/client";
 import { useToast } from '@/hooks/use-toast';
 
 // Категории фильтров
@@ -70,9 +69,7 @@ const Publications = () => {
     const fetchPublications = async () => {
       try {
         setLoading(true);
-        const { data: publications, error } = await supabase
-          .from('publications')
-          .select('*, publication_authors(*)');
+        const { data: publications, error } = await getPublications();
 
         if (error) {
           throw error;

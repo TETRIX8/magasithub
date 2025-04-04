@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookText, Plus, X, Upload, Tags } from 'lucide-react';
@@ -13,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { supabase } from "@/integrations/supabase/client";
+import { createPublication, createPublicationAuthor } from "@/integrations/supabase/client";
 
 // Категории публикаций
 const categories = [
@@ -90,18 +89,14 @@ const PublicationCreate = () => {
 
     try {
       // Сохраняем публикацию в базе данных
-      const { data: publicationData, error: publicationError } = await supabase
-        .from('publications')
-        .insert({
-          title,
-          abstract,
-          content,
-          category,
-          cover_image: coverImage,
-          tags,
-        })
-        .select('id')
-        .single();
+      const { data: publicationData, error: publicationError } = await createPublication({
+        title,
+        abstract,
+        content,
+        category,
+        cover_image: coverImage,
+        tags,
+      });
 
       if (publicationError) {
         throw publicationError;
@@ -109,14 +104,12 @@ const PublicationCreate = () => {
 
       // Если публикация успешно создана, добавляем автора
       if (publicationData?.id) {
-        const { error: authorError } = await supabase
-          .from('publication_authors')
-          .insert({
-            publication_id: publicationData.id,
-            name: authorData.name,
-            role: authorData.role,
-            avatar_url: authorData.avatarUrl,
-          });
+        const { error: authorError } = await createPublicationAuthor({
+          publication_id: publicationData.id,
+          name: authorData.name,
+          role: authorData.role,
+          avatar_url: authorData.avatarUrl,
+        });
 
         if (authorError) {
           throw authorError;

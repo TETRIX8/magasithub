@@ -10,3 +10,58 @@ const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiO
 // import { supabase } from "@/integrations/supabase/client";
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+// Custom type-safe helper functions for publications and authors
+type Publication = {
+  id: string;
+  title: string;
+  abstract: string;
+  content: string;
+  category: string;
+  date: string;
+  cover_image?: string | null;
+  author_id?: string | null;
+  comments_count?: number | null;
+  tags?: string[] | null;
+  created_at?: string | null;
+  saved?: boolean | null;
+};
+
+type PublicationAuthor = {
+  id: string;
+  publication_id?: string | null;
+  user_id?: string | null;
+  name: string;
+  role?: string | null;
+  avatar_url?: string | null;
+  created_at?: string | null;
+};
+
+// Add these functions to help with type safety
+export const getPublications = () => {
+  return supabase.from('publications').select('*, publication_authors(*)');
+};
+
+export const getPublicationById = (id: string) => {
+  return supabase.from('publications').select('*').eq('id', id).single();
+};
+
+export const getPublicationAuthors = (publicationId: string) => {
+  return supabase.from('publication_authors').select('*').eq('publication_id', publicationId);
+};
+
+export const createPublication = (publication: Omit<Publication, 'id'>) => {
+  return supabase.from('publications').insert(publication).select('id').single();
+};
+
+export const createPublicationAuthor = (author: Omit<PublicationAuthor, 'id'>) => {
+  return supabase.from('publication_authors').insert(author);
+};
+
+export const updatePublication = (id: string, data: Partial<Publication>) => {
+  return supabase.from('publications').update(data).eq('id', id);
+};
+
+export const deletePublication = (id: string) => {
+  return supabase.from('publications').delete().eq('id', id);
+};

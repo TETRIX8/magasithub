@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BookText, Calendar, Edit, Trash2, ChevronLeft, MessageCircle, Share, Bookmark, BookmarkCheck } from 'lucide-react';
@@ -20,7 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { supabase } from "@/integrations/supabase/client";
+import { getPublicationById, getPublicationAuthors, updatePublication, deletePublication } from "@/integrations/supabase/client";
 import { useToast } from '@/hooks/use-toast';
 
 const PublicationDetails = () => {
@@ -40,19 +39,12 @@ const PublicationDetails = () => {
         setLoading(true);
         
         // Получаем данные публикации
-        const { data: publicationData, error: publicationError } = await supabase
-          .from('publications')
-          .select('*')
-          .eq('id', id)
-          .single();
+        const { data: publicationData, error: publicationError } = await getPublicationById(id);
         
         if (publicationError) throw publicationError;
         
         // Получаем авторов публикации
-        const { data: authorsData, error: authorsError } = await supabase
-          .from('publication_authors')
-          .select('*')
-          .eq('publication_id', id);
+        const { data: authorsData, error: authorsError } = await getPublicationAuthors(id);
         
         if (authorsError) throw authorsError;
         
@@ -76,11 +68,10 @@ const PublicationDetails = () => {
   }, [id, navigate]);
 
   const toggleSaved = async () => {
+    if (!id) return;
+    
     try {
-      const { error } = await supabase
-        .from('publications')
-        .update({ saved: !saved })
-        .eq('id', id);
+      const { error } = await updatePublication(id, { saved: !saved });
       
       if (error) throw error;
       
@@ -102,11 +93,10 @@ const PublicationDetails = () => {
   };
 
   const handleDelete = async () => {
+    if (!id) return;
+    
     try {
-      const { error } = await supabase
-        .from('publications')
-        .delete()
-        .eq('id', id);
+      const { error } = await deletePublication(id);
       
       if (error) throw error;
       
