@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { BookText, ChevronDown, Filter, Search, SlidersHorizontal } from 'lucide-react';
+
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { BookText, ChevronDown, Filter, Search, SlidersHorizontal, Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -20,42 +22,8 @@ import {
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ProjectCard, { ProjectCardProps } from '@/components/ui/ProjectCard';
-
-// Пример данных публикаций
-const publicationsData: ProjectCardProps[] = [
-  {
-    id: '1',
-    title: 'Подходы машинного обучения для предсказательной аналитики в высшем образовании',
-    abstract: 'Это исследование рассматривает, как алгоритмы машинного обучения могут быть применены для прогнозирования успеваемости студентов и улучшения образовательных результатов в колледжах.',
-    coverImage: 'https://images.unsplash.com/photo-1581092921461-eab62e97a2d5?q=80&w=2070&auto=format&fit=crop',
-    date: '15 мая 2023',
-    category: 'Информатика',
-    authors: [
-      { id: '1', name: 'Алекс Джонсон', role: 'Профессор', avatarUrl: 'https://i.pravatar.cc/150?img=11' },
-      { id: '2', name: 'Мария Гарсия', role: 'Студент', avatarUrl: 'https://i.pravatar.cc/150?img=5' },
-      { id: '3', name: 'Дэвид Ким', role: 'Исследователь', avatarUrl: 'https://i.pravatar.cc/150?img=8' },
-    ],
-    commentsCount: 12,
-    tags: ['Машинное обучение', 'Образование', 'Наука о данных'],
-    saved: true,
-  },
-  {
-    id: '2',
-    title: 'Влияние изменения климата на городскую архитектуру: новые принципы устойчивого дизайна',
-    abstract: 'Анализ того, как изменение климата вынуждает архитекторов пересматривать традиционные принципы проектирования и внедрять более устойчивые подходы.',
-    coverImage: 'https://images.unsplash.com/photo-1518005068251-37900150dfca?q=80&w=2071&auto=format&fit=crop',
-    date: '3 апреля 2023',
-    category: 'Архитектура',
-    authors: [
-      { id: '4', name: 'Сара Чен', role: 'Профессор', avatarUrl: 'https://i.pravatar.cc/150?img=20' },
-      { id: '5', name: 'Джамал Уилсон', role: 'Студент', avatarUrl: 'https://i.pravatar.cc/150?img=12' },
-    ],
-    commentsCount: 8,
-    tags: ['Устойчивость', 'Архитектура', 'Изменение климата'],
-    saved: false,
-  },
-  // Остальные данные публикаций аналогично переведены...
-];
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from '@/hooks/use-toast';
 
 // Категории фильтров
 const categories = [
@@ -68,22 +36,6 @@ const categories = [
   'Психология',
   'Математика',
   'Литература',
-];
-
-const tags = [
-  'Машинное обучение',
-  'Образование',
-  'Наука о данных',
-  'Устойчивость',
-  'Архитектура',
-  'Изменение климата',
-  'Квантовые вычисления',
-  'Криптография',
-  'Этика ИИ',
-  'Исследования',
-  'Возобновляемая энергия',
-  'NLP',
-  'Анализ текста',
 ];
 
 const timeframes = [
@@ -101,12 +53,74 @@ const sortOptions = [
 ];
 
 const Publications = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Все категории');
   const [selectedSort, setSelectedSort] = useState('Самые новые');
   const [selectedTimeframe, setSelectedTimeframe] = useState('За все время');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [publicationsData, setPublicationsData] = useState<ProjectCardProps[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [allTags, setAllTags] = useState<string[]>([]);
+
+  // Загрузка публикаций из базы данных
+  useEffect(() => {
+    const fetchPublications = async () => {
+      try {
+        setLoading(true);
+        const { data: publications, error } = await supabase
+          .from('publications')
+          .select('*, publication_authors(*)');
+
+        if (error) {
+          throw error;
+        }
+
+        // Составляем список всех уникальных тегов для фильтров
+        const tagsSet = new Set<string>();
+        
+        // Преобразуем данные в формат ProjectCardProps
+        const formattedPublications = publications?.map(pub => {
+          // Добавляем теги в общий набор
+          pub.tags?.forEach(tag => tagsSet.add(tag));
+          
+          return {
+            id: pub.id,
+            title: pub.title,
+            abstract: pub.abstract,
+            coverImage: pub.cover_image || 'https://images.unsplash.com/photo-1581092921461-eab62e97a2d5?q=80&w=2070&auto=format&fit=crop',
+            date: new Date(pub.date).toLocaleDateString('ru-RU'),
+            category: pub.category,
+            authors: pub.publication_authors?.map((author: any) => ({
+              id: author.id,
+              name: author.name,
+              role: author.role || 'Исследователь',
+              avatarUrl: author.avatar_url || `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 20) + 1}`,
+            })) || [],
+            commentsCount: pub.comments_count || 0,
+            tags: pub.tags || [],
+            saved: pub.saved || false,
+          };
+        }) || [];
+
+        setPublicationsData(formattedPublications);
+        setAllTags(Array.from(tagsSet));
+        setLoading(false);
+      } catch (error) {
+        console.error('Ошибка при загрузке публикаций:', error);
+        toast({
+          title: "Ошибка загрузки",
+          description: "Не удалось загрузить публикации. Пожалуйста, попробуйте позже.",
+          variant: "destructive",
+        });
+        setLoading(false);
+      }
+    };
+
+    fetchPublications();
+  }, []);
 
   // Обработка выбора тегов
   const toggleTag = (tag: string) => {
@@ -135,6 +149,20 @@ const Publications = () => {
     return true;
   });
 
+  // Сортировка публикаций
+  const sortedPublications = [...filteredPublications].sort((a, b) => {
+    switch (selectedSort) {
+      case 'Самые новые':
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      case 'По алфавиту (А-Я)':
+        return a.title.localeCompare(b.title, 'ru');
+      case 'По алфавиту (Я-А)':
+        return b.title.localeCompare(a.title, 'ru');
+      default:
+        return 0;
+    }
+  });
+
   return (
     <>
       <Header />
@@ -151,7 +179,8 @@ const Publications = () => {
                 Исследуйте научные статьи, кейсы и академические публикации.
               </p>
             </div>
-            <Button size="sm">
+            <Button size="sm" onClick={() => navigate('/publication/create')}>
+              <Plus className="w-4 h-4 mr-2" />
               Отправить публикацию
             </Button>
           </div>
@@ -220,7 +249,7 @@ const Publications = () => {
                       <div>
                         <h5 className="text-sm font-medium mb-2">Теги</h5>
                         <div className="max-h-40 overflow-y-auto space-y-2">
-                          {tags.map(tag => (
+                          {allTags.map(tag => (
                             <div key={tag} className="flex items-center space-x-2">
                               <Checkbox 
                                 id={`tag-${tag}`} 
@@ -285,7 +314,7 @@ const Publications = () => {
                   <div>
                     <h5 className="text-sm font-medium mb-2">Популярные теги</h5>
                     <div className="flex flex-wrap gap-1">
-                      {tags.slice(0, 8).map(tag => (
+                      {allTags.slice(0, 8).map(tag => (
                         <Badge 
                           key={tag} 
                           variant={selectedTags.includes(tag) ? "default" : "outline"}
@@ -367,12 +396,32 @@ const Publications = () => {
           <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <div className="mb-6 flex justify-between items-center">
               <p className="text-muted-foreground">
-                Показано {filteredPublications.length} из {publicationsData.length} публикаций
+                {loading 
+                  ? 'Загрузка публикаций...' 
+                  : `Показано ${sortedPublications.length} из ${publicationsData.length} публикаций`
+                }
               </p>
             </div>
-            {filteredPublications.length > 0 ? (
+            {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredPublications.map(publication => (
+                {[1, 2, 3].map(i => (
+                  <Card key={i} className="p-4">
+                    <div className="animate-pulse">
+                      <div className="bg-gray-200 h-40 w-full rounded-lg mb-4"></div>
+                      <div className="bg-gray-200 h-8 w-3/4 rounded mb-2"></div>
+                      <div className="bg-gray-200 h-4 w-full rounded mb-2"></div>
+                      <div className="bg-gray-200 h-4 w-5/6 rounded mb-4"></div>
+                      <div className="flex space-x-2">
+                        <div className="bg-gray-200 h-6 w-20 rounded"></div>
+                        <div className="bg-gray-200 h-6 w-20 rounded"></div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : sortedPublications.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {sortedPublications.map(publication => (
                   <ProjectCard key={publication.id} {...publication} />
                 ))}
               </div>
@@ -399,7 +448,7 @@ const Publications = () => {
               </Card>
             )}
             {/* Пагинация (упрощенная) */}
-            {filteredPublications.length > 0 && (
+            {sortedPublications.length > 0 && (
               <div className="mt-8 flex justify-center">
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" disabled>

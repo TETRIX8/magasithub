@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Publications from "./pages/Publications";
+import PublicationDetails from "./pages/PublicationDetails";
+import PublicationCreate from "./pages/PublicationCreate";
 import NotFound from "./pages/NotFound";
 import WelcomeDialog from "./components/WelcomeDialog";
 
@@ -25,6 +27,8 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/publications" element={<Publications />} />
+          <Route path="/publications/:id" element={<PublicationDetails />} />
+          <Route path="/publication/create" element={<PublicationCreate />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
