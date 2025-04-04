@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookText, Plus, X, Upload, Tags } from 'lucide-react';
@@ -94,8 +95,9 @@ const PublicationCreate = () => {
         abstract,
         content,
         category,
-        cover_image: coverImage,
-        tags,
+        cover_image: coverImage || null,
+        tags: tags.length > 0 ? tags : null,
+        // date field is now optional in our type definition, so we don't need to provide it
       });
 
       if (publicationError) {

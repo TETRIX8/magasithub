@@ -18,7 +18,7 @@ type Publication = {
   abstract: string;
   content: string;
   category: string;
-  date: string;
+  date?: string; // Made optional since it has a default in the database
   cover_image?: string | null;
   author_id?: string | null;
   comments_count?: number | null;
