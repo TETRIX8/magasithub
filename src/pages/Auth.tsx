@@ -1,111 +1,127 @@
 
-import React, { useState, useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, GraduationCap, Loader2 } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useAuth } from "@/context/AuthContext";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/AuthContext';
+import { GraduationCap } from 'lucide-react';
+import MainLayout from '@/components/layout/MainLayout';
 
 const Auth = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user, login, error, loading } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const { login } = useAuth();
 
-  // Redirect if already authenticated
-  if (user && !loading) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    
+    if (!email || !password) {
+      toast({
+        title: "Ошибка",
+        description: "Пожалуйста, заполните все поля",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsLoading(true);
+    
     try {
       await login(email, password);
-      navigate("/dashboard");
+      toast({
+        title: "Успешно!",
+        description: "Добро пожаловать в АкадемХаб",
+      });
+      navigate('/dashboard');
+    } catch (error) {
+      toast({
+        title: "Ошибка аутентификации",
+        description: "Неверный email или пароль",
+        variant: "destructive",
+      });
+      console.error('Ошибка аутентификации:', error);
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-50 to-white p-4">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <div className="flex justify-center mb-4">
-            <GraduationCap className="h-12 w-12 text-primary" />
+    <MainLayout showHeader={false}>
+      <div className="flex items-center justify-center min-h-screen bg-muted/30">
+        <div className="w-full max-w-md px-4">
+          <div className="flex justify-center mb-6">
+            <div className="flex items-center gap-2">
+              <GraduationCap className="h-10 w-10 text-primary" />
+              <span className="text-2xl font-display font-semibold tracking-tight">АкадемХаб</span>
+            </div>
           </div>
-          <h1 className="text-2xl font-display font-bold">АкадемХаб</h1>
-          <p className="text-muted-foreground mt-2">Единая платформа для академического сообщества</p>
-        </div>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Вход в систему</CardTitle>
-            <CardDescription>
-              Используйте ваши учетные данные от LXP платформы для входа
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {error && (
-              <Alert variant="destructive" className="mb-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Авторизация</CardTitle>
+              <CardDescription>
+                Войдите в свою учетную запись для доступа к АкадемХабу
+              </CardDescription>
+            </CardHeader>
             
-            <form onSubmit={handleSubmit}>
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="name@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Пароль</Label>
-                    <a href="#" className="text-sm text-primary hover:underline">
-                      Забыли пароль?
-                    </a>
-                  </div>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : null}
-                  {isSubmitting ? "Вход..." : "Войти"}
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-          <CardFooter className="flex flex-col">
-            <p className="text-xs text-center text-muted-foreground mt-4">
-              Указывая свои персональные данные, вы соглашаетесь с{" "}
-              <a href="#" className="text-primary hover:underline">
-                Политикой конфиденциальности
-              </a>
-            </p>
-          </CardFooter>
-        </Card>
+            <Tabs defaultValue="login">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="login">Войти</TabsTrigger>
+                <TabsTrigger value="register" disabled>Регистрация</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="login">
+                <form onSubmit={handleAuth}>
+                  <CardContent className="space-y-4 pt-4">
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-medium">
+                        Email
+                      </label>
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        placeholder="you@example.com" 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label htmlFor="password" className="text-sm font-medium">
+                          Пароль
+                        </label>
+                        <a href="#" className="text-xs text-primary hover:underline">
+                          Забыли пароль?
+                        </a>
+                      </div>
+                      <Input 
+                        id="password" 
+                        type="password" 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                      />
+                    </div>
+                  </CardContent>
+                  
+                  <CardFooter>
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading ? 'Вход...' : 'Войти'}
+                    </Button>
+                  </CardFooter>
+                </form>
+              </TabsContent>
+            </Tabs>
+          </Card>
+        </div>
       </div>
-    </div>
+    </MainLayout>
   );
 };
 

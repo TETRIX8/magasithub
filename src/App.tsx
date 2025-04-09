@@ -14,6 +14,7 @@ import PublicationCreate from "./pages/PublicationCreate";
 import NotFound from "./pages/NotFound";
 import WelcomeDialog from "./components/WelcomeDialog";
 import Auth from "./pages/Auth";
+import Header from "./components/layout/Header";
 
 const queryClient = new QueryClient();
 
@@ -31,11 +32,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <WelcomeDialog />
-        <BrowserRouter>
+      <BrowserRouter>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <WelcomeDialog />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
@@ -67,8 +68,8 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+        </TooltipProvider>
+      </BrowserRouter>
     </AuthProvider>
   </QueryClientProvider>
 );
