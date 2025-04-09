@@ -105,9 +105,10 @@ const PublicationCreate = () => {
       }
 
       // Если публикация успешно создана, добавляем автора
-      if (publicationData?.id) {
+      // Fix: properly handle the array of data returned by Supabase
+      if (publicationData && publicationData[0] && publicationData[0].id) {
         const { error: authorError } = await createPublicationAuthor({
-          publication_id: publicationData.id,
+          publication_id: publicationData[0].id,
           name: authorData.name,
           role: authorData.role,
           avatar_url: authorData.avatarUrl,
