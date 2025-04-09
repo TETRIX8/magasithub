@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Award, BookOpen, Download, Edit, FileText, GraduationCap, 
@@ -14,6 +13,8 @@ import { Separator } from "@/components/ui/separator";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ProjectCard, { ProjectCardProps } from '@/components/ui/ProjectCard';
+import UserDisciplines from '@/components/UserDisciplines';
+import { useAuth } from '@/context/AuthContext';
 
 // Sample publications data
 const userPublications: ProjectCardProps[] = [
@@ -47,75 +48,83 @@ const userPublications: ProjectCardProps[] = [
   },
 ];
 
-// Sample user data
-const userData = {
-  name: 'Полный ахматтт',
-  role: 'Студент факультета информатики',
-  year: '3 курс',
-  email: 'ivan.petrov@university.edu',
-  location: 'Технологический университет',
-  website: 'ivanpetrov.io',
-  bio: 'Студент факультета информатики, специализирующийся на машинном обучении и оптимизации баз данных. Увлечен образовательными технологиями и улучшением результатов обучения с помощью анализа данных.',
-  education: [
-    {
-      id: '1',
-      degree: 'Бакалавр информатики',
-      institution: 'Технологический университет',
-      year: '2021 - настоящее время',
-    },
-    {
-      id: '2',
-      degree: 'Среднее профессиональное образование, Разработка ПО',
-      institution: 'Колледж информационных технологий',
-      year: '2019 - 2021',
-    },
-  ],
-  experience: [
-    {
-      id: '1',
-      position: 'Научный ассистент',
-      organization: 'Лаборатория ИИ и науки о данных',
-      duration: 'Июнь 2022 - настоящее время',
-      description: 'Участие в исследовательских проектах, направленных на применение методов машинного обучения к образовательным данным. Разработка прогнозных моделей успеваемости студентов.',
-    },
-    {
-      id: '2',
-      position: 'Ассистент преподавателя',
-      organization: 'Кафедра информатики',
-      duration: 'Сен 2021 - Май 2022',
-      description: 'Помощь в преподавании вводных курсов программирования. Проведение лабораторных занятий и оказание поддержки студентам.',
-    },
-  ],
-  skills: [
-    'Python', 'Машинное обучение', 'Анализ данных', 'SQL', 'Проектирование баз данных',
-    'JavaScript', 'React', 'Git', 'Методология исследований', 'Академическое письмо'
-  ],
-  publications: 12,
-  citations: 87,
-  projects: 8,
-  awards: [
-    {
-      id: '1',
-      title: 'Выдающийся студент-исследователь',
-      issuer: 'Кафедра информатики',
-      year: '2022',
-    },
-    {
-      id: '2',
-      title: 'Лучшая научная работа',
-      issuer: 'Студенческий исследовательский симпозиум',
-      year: '2021',
-    },
-  ],
-};
-
 const Profile = () => {
   const [resumeDownloaded, setResumeDownloaded] = useState(false);
+  const { user } = useAuth();
   
   const handleDownloadResume = () => {
     // Здесь была бы логика загрузки PDF
     setResumeDownloaded(true);
     setTimeout(() => setResumeDownloaded(false), 3000);
+  };
+
+  if (!user) {
+    return (
+      <>
+        <Header />
+        <main className="pt-20 pb-16">
+          <div className="container mx-auto px-4">
+            <Card>
+              <CardContent className="p-8 flex flex-col items-center justify-center">
+                <div className="text-center">
+                  <h2 className="text-2xl font-bold mb-4">Требуется авторизация</h2>
+                  <p className="text-muted-foreground mb-6">Пожалуйста, войдите в систему чтобы просмотреть профиль</p>
+                  <Button asChild>
+                    <Link to="/auth">Войти</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+  
+  // Sample user data enhanced with LXP data
+  const userData = {
+    name: user.firstName || "Пользователь",
+    role: user.isLead ? "Руководитель" : "Преподаватель",
+    year: user.teacher ? "Преподаватель" : "Студент",
+    email: user.email,
+    location: user.assignedSuborganizations && user.assignedSuborganizations.length > 0 
+      ? user.assignedSuborganizations[0].suborganization.name 
+      : "Университет",
+    website: "ithub.ru",
+    bio: "Специалист в области информационных технологий и образования.",
+    education: [
+      {
+        id: '1',
+        degree: 'Высшее образование',
+        institution: 'Технологический университет',
+        year: '2018 - 2022',
+      },
+    ],
+    experience: [
+      {
+        id: '1',
+        position: 'Преподаватель',
+        organization: 'Кафедра информационных технологий',
+        duration: 'Сентябрь 2022 - настоящее время',
+        description: 'Преподавание дисциплин в области информационных технологий и программирования.',
+      },
+    ],
+    skills: [
+      'Программирование', 'Web-разработка', 'Преподавание', 'Исследования', 'Анализ данных',
+      'JavaScript', 'React', 'Node.js', 'Python', 'Методология образования'
+    ],
+    publications: 12,
+    citations: 87,
+    projects: 8,
+    awards: [
+      {
+        id: '1',
+        title: 'Лучший преподаватель года',
+        issuer: 'Университет',
+        year: '2023',
+      },
+    ],
   };
   
   return (
@@ -130,7 +139,7 @@ const Profile = () => {
               <div className="px-4 sm:px-6 pb-6 relative">
                 <div className="flex flex-col sm:flex-row sm:items-end -mt-12 sm:-mt-16 mb-6 sm:mb-4 gap-4 sm:gap-6">
                   <Avatar className="h-24 w-24 sm:h-32 sm:w-32 border-4 border-white shadow-md">
-                    <AvatarImage src="https://i.pravatar.cc/150?img=68" alt={userData.name} />
+                    <AvatarImage src={user.avatar || "https://i.pravatar.cc/150?img=68"} alt={userData.name} />
                     <AvatarFallback>{userData.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
@@ -209,12 +218,17 @@ const Profile = () => {
             
             {/* Вкладки */}
             <div className="mt-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <Tabs defaultValue="publications">
+              <Tabs defaultValue="disciplines">
                 <TabsList className="mb-6">
+                  <TabsTrigger value="disciplines">Дисциплины</TabsTrigger>
                   <TabsTrigger value="publications">Публикации</TabsTrigger>
                   <TabsTrigger value="resume">Резюме</TabsTrigger>
-                  <TabsTrigger value="projects">Проекты</TabsTrigger>
                 </TabsList>
+                
+                {/* Вкладка дисциплин (новая) */}
+                <TabsContent value="disciplines" className="space-y-6">
+                  <UserDisciplines />
+                </TabsContent>
                 
                 {/* Вкладка публикаций */}
                 <TabsContent value="publications" className="space-y-6">
@@ -375,18 +389,6 @@ const Profile = () => {
                       </div>
                     </CardContent>
                   </Card>
-                </TabsContent>
-                
-                {/* Вкладка проектов */}
-                <TabsContent value="projects">
-                  <div className="flex items-center justify-center h-40 bg-muted rounded-lg">
-                    <div className="text-center">
-                      <p className="text-muted-foreground mb-2">
-                        Проекты пока не добавлены.
-                      </p>
-                      <Button>Добавить проект</Button>
-                    </div>
-                  </div>
                 </TabsContent>
               </Tabs>
             </div>

@@ -37,6 +37,43 @@ type PublicationAuthor = {
   created_at?: string | null;
 };
 
+// LXP API types
+export interface LXPUser {
+  id: string;
+  firstName: string;
+  email: string;
+  avatar?: string;
+  isLead: boolean;
+  roles: string[];
+  phoneNumber?: string;
+  teacher?: {
+    assignedDisciplines_V2: Array<{
+      discipline: {
+        name: string;
+        code: string;
+        studyPeriods: Array<{
+          name: string;
+          startDate: string;
+          endDate: string;
+        }>;
+      };
+    }>;
+  };
+  assignedSuborganizations?: Array<{
+    suborganization: {
+      name: string;
+    };
+  }>;
+}
+
+export interface LXPAuthResponse {
+  accessToken: string;
+  user: {
+    id: string;
+    isLead: boolean;
+  };
+}
+
 // Add these functions to help with type safety
 export const getPublications = () => {
   return supabase.from('publications').select('*, publication_authors(*)');
