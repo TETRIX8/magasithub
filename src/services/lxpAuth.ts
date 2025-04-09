@@ -30,7 +30,17 @@ export const lxpAuth = {
     };
     
     try {
-      const response = await axios.post(API_URL, { query, variables });
+      const response = await axios.post(API_URL, { 
+        operationName: "SignIn",
+        query, 
+        variables 
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+          "apollographql-client-name": "web"
+        }
+      });
+      
       const result = response.data.data;
       
       if (result && result.signIn && result.signIn.accessToken) {
@@ -99,13 +109,73 @@ export const lxpAuth = {
     }
     `;
     
-    const headers = { Authorization: `Bearer ${authToken}` };
+    const headers = { 
+      "Authorization": `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+      "apollographql-client-name": "web"
+    };
     
     try {
-      const response = await axios.post(API_URL, { query }, { headers });
+      const response = await axios.post(API_URL, { 
+        operationName: "GetMe",
+        query 
+      }, { headers });
       return response.data.data.getMe;
     } catch (error) {
       console.error("Error fetching user data:", error);
+      throw error;
+    }
+  },
+  
+  // Get student diary data
+  getStudentDiary: async (studentId: string, token?: string) => {
+    const authToken = token || localStorage.getItem('lxp_token');
+    
+    if (!authToken) {
+      throw new Error('No authentication token found');
+    }
+    
+    const diaryQuery = `
+    query DiaryQuery($studentId: UUID!) {
+      searchStudentDisciplines(input: { studentId: $studentId }) {
+        discipline {
+          name
+          code
+          teachers {
+            user {
+              lastName
+              firstName
+              middleName
+            }
+          }
+        }
+        disciplineGrade
+        maxScoreForAnsweredTasks
+        scoreForAnsweredTasks
+        disciplineAttendance {
+          percent
+          total
+          visited
+        }
+      }
+    }`;
+    
+    const headers = { 
+      "Authorization": `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+      "apollographql-client-name": "web"
+    };
+    
+    try {
+      const response = await axios.post(API_URL, {
+        operationName: "DiaryQuery",
+        query: diaryQuery,
+        variables: { studentId }
+      }, { headers });
+      
+      return response.data.data.searchStudentDisciplines;
+    } catch (error) {
+      console.error("Error fetching student diary:", error);
       throw error;
     }
   },
